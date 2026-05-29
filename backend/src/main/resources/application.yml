@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: campusconnect-ai
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.campusconnect: INFO
+    org.springframework.security: INFO
