@@ -105,8 +105,8 @@ public class ChatService {
             JsonNode response = geminiWebClient.post()
                     .uri(uriBuilder -> uriBuilder
                             .path("/models/{model}:generateContent")
-                            .queryParam("key", properties.getKey())
                             .build(properties.getModel()))
+                    .header("X-goog-api-key", properties.getKey())
                     .bodyValue(buildRequestBody(userMessage))
                     .retrieve()
                     .bodyToMono(JsonNode.class)
@@ -135,15 +135,17 @@ public class ChatService {
         if (response == null) {
             return FALLBACK_REPLY;
         }
-        JsonNode textNode = response
-                .path("candidates").path(0)
-                .path("content").path("parts").path(0)
-                .path("text");
-
-        if (textNode.isMissingNode() || !StringUtils.hasText(textNode.asText())) {
-            log.warn("Gemini response did not contain any text content");
-            return FALLBACK_REPLY;
+        // newer "thinking" models can return several parts, so pick the first one that has actual text
+        JsonNode parts = response.path("candidates").path(0).path("content").path("parts");
+        if (parts.isArray()) {
+            for (JsonNode part : parts) {
+                JsonNode text = part.path("text");
+                if (!text.isMissingNode() && StringUtils.hasText(text.asText())) {
+                    return text.asText().trim();
+                }
+            }
         }
-        return textNode.asText().trim();
+        log.warn("Gemini response did not contain any text content");
+        return FALLBACK_REPLY;
     }
 }

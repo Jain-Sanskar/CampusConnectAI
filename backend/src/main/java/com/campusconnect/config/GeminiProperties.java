@@ -10,7 +10,7 @@ public class GeminiProperties {
     // the API key is supplied via the GEMINI_API_KEY env var - never commit a real one
     private String key;
     private String baseUrl = "https://generativelanguage.googleapis.com/v1beta";
-    private String model = "gemini-2.0-flash";
+    private String model = "gemini-flash-latest";
     private int timeoutSeconds = 20;
 
     public String getKey() {
