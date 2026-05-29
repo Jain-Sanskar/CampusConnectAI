@@ -1,14 +1,23 @@
 package com.campusconnect.service;
 
 import com.campusconnect.config.GeminiProperties;
+import com.campusconnect.dto.ChatRequest;
+import com.campusconnect.dto.ChatResponse;
+import com.campusconnect.entity.ChatMessage;
+import com.campusconnect.entity.ChatSession;
+import com.campusconnect.exception.ResourceNotFoundException;
+import com.campusconnect.repository.ChatMessageRepository;
+import com.campusconnect.repository.ChatSessionRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -30,10 +39,60 @@ public class ChatService {
 
     private final WebClient geminiWebClient;
     private final GeminiProperties properties;
+    private final ChatSessionRepository sessionRepository;
+    private final ChatMessageRepository messageRepository;
 
-    public ChatService(WebClient geminiWebClient, GeminiProperties properties) {
+    public ChatService(WebClient geminiWebClient,
+                       GeminiProperties properties,
+                       ChatSessionRepository sessionRepository,
+                       ChatMessageRepository messageRepository) {
         this.geminiWebClient = geminiWebClient;
         this.properties = properties;
+        this.sessionRepository = sessionRepository;
+        this.messageRepository = messageRepository;
+    }
+
+    @Transactional
+    public ChatResponse chat(Long userId, ChatRequest request) {
+        ChatSession session = resolveSession(userId, request);
+
+        String reply = generateReply(request.getMessage());
+
+        messageRepository.save(new ChatMessage(session.getId(), request.getMessage(), reply));
+        session.setLastActivityAt(LocalDateTime.now());
+        sessionRepository.save(session);
+
+        return new ChatResponse(reply, session.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChatSession> getSessions(Long userId) {
+        return sessionRepository.findByUserIdOrderByLastActivityAtDesc(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChatMessage> getMessages(Long userId, Long sessionId) {
+        // make sure the session exists and actually belongs to the caller before returning anything
+        ownedSession(userId, sessionId);
+        return messageRepository.findBySessionIdOrderByCreatedAtAsc(sessionId);
+    }
+
+    private ChatSession resolveSession(Long userId, ChatRequest request) {
+        if (request.getSessionId() != null) {
+            return ownedSession(userId, request.getSessionId());
+        }
+        return sessionRepository.save(new ChatSession(userId, deriveTitle(request.getMessage())));
+    }
+
+    private ChatSession ownedSession(Long userId, Long sessionId) {
+        return sessionRepository.findById(sessionId)
+                .filter(s -> s.getUserId().equals(userId))
+                .orElseThrow(() -> new ResourceNotFoundException("Chat session not found"));
+    }
+
+    private String deriveTitle(String message) {
+        String trimmed = message.strip();
+        return trimmed.length() > 50 ? trimmed.substring(0, 50) + "..." : trimmed;
     }
 
     public String generateReply(String userMessage) {
