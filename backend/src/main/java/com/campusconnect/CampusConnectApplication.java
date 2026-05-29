@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Entry point for the CampusConnect AI backend.
@@ -13,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * LLM-backed "AI Senior" mentor.
  */
 @SpringBootApplication
+@EnableScheduling
 public class CampusConnectApplication {
 
     private static final Logger log = LoggerFactory.getLogger(CampusConnectApplication.class);

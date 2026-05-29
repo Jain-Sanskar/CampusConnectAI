@@ -42,6 +42,12 @@ gemini:
     model: ${GEMINI_MODEL:gemini-2.0-flash}
     timeout-seconds: ${GEMINI_TIMEOUT_SECONDS:20}
 
+chat:
+  # how many days of inactive conversations to keep before the cleanup job flushes them
+  retention-days: ${CHAT_RETENTION_DAYS:7}
+  # default: run daily at 03:00
+  cleanup-cron: ${CHAT_CLEANUP_CRON:0 0 3 * * *}
+
 logging:
   level:
     com.campusconnect: INFO
