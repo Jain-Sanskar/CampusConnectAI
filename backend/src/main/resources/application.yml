@@ -2,6 +2,23 @@ spring:
   application:
     name: campusconnect-ai
 
+  datasource:
+    # Local-dev defaults; override via environment variables in any real deployment.
+    url: ${DB_URL:jdbc:mysql://localhost:3306/campusconnect?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    open-in-view: false
+
 server:
   port: 8080
 
