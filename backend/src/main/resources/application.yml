@@ -35,6 +35,13 @@ jwt:
   secret: ${JWT_SECRET:ZHVtbXktZGV2LXNlY3JldC1jaGFuZ2UtbWUtaW4tcHJvZHVjdGlvbi1jYW1wdXNjb25uZWN0LWFpLTEyMzQ1Ng==}
   expiration: ${JWT_EXPIRATION:86400000}
 
+gemini:
+  api:
+    key: ${GEMINI_API_KEY:}
+    base-url: ${GEMINI_BASE_URL:https://generativelanguage.googleapis.com/v1beta}
+    model: ${GEMINI_MODEL:gemini-2.0-flash}
+    timeout-seconds: ${GEMINI_TIMEOUT_SECONDS:20}
+
 logging:
   level:
     com.campusconnect: INFO
