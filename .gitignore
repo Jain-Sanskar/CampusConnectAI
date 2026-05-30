@@ -39,3 +39,6 @@ Thumbs.db
 
 # ===== Local run artifacts (logs + pid files from scripts/) =====
 .run/
+
+# ===== Local secrets loaded by scripts/start.sh (never commit real keys) =====
+.env.local

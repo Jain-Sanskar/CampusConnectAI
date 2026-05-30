@@ -3,6 +3,12 @@
 set -uo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
+# Load local secrets (git-ignored) so you don't have to export them every time.
+if [ -f "$ROOT_DIR/.env.local" ]; then
+  set -a; source "$ROOT_DIR/.env.local"; set +a
+  ok "Loaded local environment from .env.local"
+fi
+
 start_mysql() {
   if port_up "$DB_PORT"; then
     ok "MySQL already running (port $DB_PORT)"

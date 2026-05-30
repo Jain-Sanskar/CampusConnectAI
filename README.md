@@ -67,6 +67,16 @@ CampusConnectAI/
 ./scripts/stop.sh     # stops backend + frontend (add --all to also stop MySQL)
 ```
 
+To enable the live AI chat, drop a free Gemini key into a local secrets file
+(it's git-ignored and auto-loaded by `start.sh`):
+
+```bash
+cp .env.local.example .env.local
+# edit .env.local and set GEMINI_API_KEY (get one free at https://aistudio.google.com/apikey)
+```
+
+Without a key the AI Senior simply returns a friendly fallback message.
+
 ### Manual path
 
 You need **JDK 17+**, **Node 18+**, and **MySQL 8** running locally.
