@@ -1,6 +1,7 @@
 package com.campusconnect.controller;
 
 import com.campusconnect.dto.ResourceDto;
+import com.campusconnect.dto.ResourceOptions;
 import com.campusconnect.entity.User;
 import com.campusconnect.repository.UserRepository;
 import com.campusconnect.service.ResourceService;
@@ -37,6 +38,12 @@ public class ResourceController {
     public ResponseEntity<List<ResourceDto>> list(@RequestParam(required = false) String category,
                                                   @RequestParam(required = false) String subject) {
         return ResponseEntity.ok(resourceService.list(category, subject));
+    }
+
+    // literal path is matched before the /{id} variable, so this never clashes
+    @GetMapping("/options")
+    public ResponseEntity<ResourceOptions> options() {
+        return ResponseEntity.ok(resourceService.getOptions());
     }
 
     @GetMapping("/{id}")

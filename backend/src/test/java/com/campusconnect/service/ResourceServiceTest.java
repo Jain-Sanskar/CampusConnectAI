@@ -1,6 +1,7 @@
 package com.campusconnect.service;
 
 import com.campusconnect.dto.ResourceDto;
+import com.campusconnect.dto.ResourceOptions;
 import com.campusconnect.entity.Resource;
 import com.campusconnect.exception.ResourceNotFoundException;
 import com.campusconnect.repository.ResourceRepository;
@@ -60,6 +61,19 @@ class ResourceServiceTest {
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getSubject()).isEqualTo("DBMS");
+    }
+
+    @Test
+    void getOptionsCollectsDistinctValues() {
+        when(resourceRepository.findDistinctCategories()).thenReturn(List.of("Notes", "Video"));
+        when(resourceRepository.findDistinctSubjects()).thenReturn(List.of("DBMS", "Operating Systems"));
+        when(resourceRepository.findDistinctTypes()).thenReturn(List.of("PDF", "LINK"));
+
+        ResourceOptions options = resourceService.getOptions();
+
+        assertThat(options.getCategories()).containsExactly("Notes", "Video");
+        assertThat(options.getSubjects()).containsExactly("DBMS", "Operating Systems");
+        assertThat(options.getTypes()).containsExactly("PDF", "LINK");
     }
 
     @Test

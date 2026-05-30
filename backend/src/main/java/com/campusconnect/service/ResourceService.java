@@ -1,6 +1,7 @@
 package com.campusconnect.service;
 
 import com.campusconnect.dto.ResourceDto;
+import com.campusconnect.dto.ResourceOptions;
 import com.campusconnect.entity.Resource;
 import com.campusconnect.exception.ResourceNotFoundException;
 import com.campusconnect.repository.ResourceRepository;
@@ -29,6 +30,13 @@ public class ResourceService {
         return resourceRepository.search(categoryFilter, subjectFilter).stream()
                 .map(this::toDto)
                 .toList();
+    }
+
+    public ResourceOptions getOptions() {
+        return new ResourceOptions(
+                resourceRepository.findDistinctCategories(),
+                resourceRepository.findDistinctSubjects(),
+                resourceRepository.findDistinctTypes());
     }
 
     public ResourceDto getById(Long id) {

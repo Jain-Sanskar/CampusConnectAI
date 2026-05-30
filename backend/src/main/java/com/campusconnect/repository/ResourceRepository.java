@@ -17,4 +17,14 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
             + "(:subject IS NULL OR LOWER(r.subject) = LOWER(:subject)) "
             + "ORDER BY r.createdAt DESC")
     List<Resource> search(@Param("category") String category, @Param("subject") String subject);
+
+    // distinct values power the self-extending dropdowns in the admin form
+    @Query("SELECT DISTINCT r.category FROM Resource r WHERE r.category IS NOT NULL AND r.category <> '' ORDER BY r.category")
+    List<String> findDistinctCategories();
+
+    @Query("SELECT DISTINCT r.subject FROM Resource r WHERE r.subject IS NOT NULL AND r.subject <> '' ORDER BY r.subject")
+    List<String> findDistinctSubjects();
+
+    @Query("SELECT DISTINCT r.type FROM Resource r WHERE r.type IS NOT NULL AND r.type <> '' ORDER BY r.type")
+    List<String> findDistinctTypes();
 }
