@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import ComboBox from './ComboBox'
+import { getResourceOptions } from '../api/resourceApi'
 
 const EMPTY = {
   title: '',
@@ -21,6 +23,22 @@ const isValidUrl = (value) => {
 export default function ResourceFormModal({ initial, saving, serverError, onClose, onSave }) {
   const [form, setForm] = useState(initial ? { ...EMPTY, ...initial } : EMPTY)
   const [errors, setErrors] = useState({})
+  const [options, setOptions] = useState({ categories: [], subjects: [], types: [] })
+
+  // pull the existing values so the dropdowns are pre-populated
+  useEffect(() => {
+    getResourceOptions()
+      .then((data) =>
+        setOptions({
+          categories: data.categories || [],
+          subjects: data.subjects || [],
+          types: data.types || [],
+        }),
+      )
+      .catch(() => {
+        /* dropdowns just start empty - admin can still add new values */
+      })
+  }, [])
 
   const validate = () => {
     const next = {}
@@ -38,6 +56,11 @@ export default function ResourceFormModal({ initial, saving, serverError, onClos
 
   const handleChange = (event) => {
     const { name, value } = event.target
+    setForm((prev) => ({ ...prev, [name]: value }))
+  }
+
+  // ComboBox reports changes as (name, value)
+  const setField = (name, value) => {
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
@@ -96,11 +119,37 @@ export default function ResourceFormModal({ initial, saving, serverError, onClos
             placeholder: 'Short summary of what this covers',
           })}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {field('category', 'Category', { placeholder: 'Notes / PYQ / Video' })}
-            {field('subject', 'Subject', { placeholder: 'Operating Systems' })}
+            <ComboBox
+              label="Category"
+              name="category"
+              required
+              value={form.category}
+              options={options.categories}
+              onChange={setField}
+              error={errors.category}
+              placeholder="e.g. Notes"
+            />
+            <ComboBox
+              label="Subject"
+              name="subject"
+              required
+              value={form.subject}
+              options={options.subjects}
+              onChange={setField}
+              error={errors.subject}
+              placeholder="e.g. Operating Systems"
+            />
           </div>
           {field('resourceUrl', 'Resource URL', { placeholder: 'https://…' })}
-          {field('type', 'Type (optional)', { placeholder: 'PDF / Link / Video' })}
+          <ComboBox
+            label="Type (optional)"
+            name="type"
+            value={form.type}
+            options={options.types}
+            onChange={setField}
+            error={errors.type}
+            placeholder="e.g. PDF"
+          />
 
           <div className="flex justify-end gap-3 pt-2">
             <button

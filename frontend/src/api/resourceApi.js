@@ -8,6 +8,10 @@ export const listResources = (filters = {}) => {
   return axiosClient.get('/resources', { params }).then((res) => res.data)
 }
 
+// distinct category/subject/type values currently in use (powers the dropdowns)
+export const getResourceOptions = () =>
+  axiosClient.get('/resources/options').then((res) => res.data)
+
 export const createResource = (payload) =>
   axiosClient.post('/resources', payload).then((res) => res.data)
 
