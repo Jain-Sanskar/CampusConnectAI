@@ -58,7 +58,26 @@ CampusConnectAI/
 
 ## Getting Started
 
-Setup and run instructions for each module live in their respective folders and will be expanded as the project is built:
+You need **JDK 17+**, **Node 18+**, and **MySQL 8** running locally.
+
+```bash
+# 1. Database
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS campusconnect;"
+
+# 2. Backend (http://localhost:8080)
+cd backend
+export GEMINI_API_KEY="your-key"   # optional — enables live AI replies
+mvn spring-boot:run
+
+# 3. Frontend (http://localhost:5173)
+cd frontend
+cp .env.example .env
+npm install
+npm run dev
+```
+
+A default admin (`admin@campusconnect.com` / `Admin@123`) and sample resources are
+seeded automatically on first backend boot. Module-specific details:
 
 - Backend: see [`backend/README.md`](./backend/README.md)
 - Frontend: see [`frontend/README.md`](./frontend/README.md)
