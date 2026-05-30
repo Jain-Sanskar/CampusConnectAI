@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import ResourceCard from '../components/ResourceCard'
+import Spinner from '../components/Spinner'
 import { listResources } from '../api/resourceApi'
 import { useAuth } from '../context/AuthContext'
 
@@ -107,7 +108,9 @@ export default function Dashboard() {
 
         <div className="mt-6">
           {loading ? (
-            <p className="text-slate-400">Loading resources…</p>
+            <div className="flex items-center gap-2 text-slate-400">
+              <Spinner /> Loading resources…
+            </div>
           ) : resources.length === 0 ? (
             <div className="text-center py-16 text-slate-400">
               No resources found{hasFilters ? ' for these filters.' : ' yet.'}

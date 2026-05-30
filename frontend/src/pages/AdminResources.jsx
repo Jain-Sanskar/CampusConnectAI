@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import ResourceFormModal from '../components/ResourceFormModal'
+import Spinner from '../components/Spinner'
 import {
   listResources,
   createResource,
@@ -94,7 +95,9 @@ export default function AdminResources() {
 
         <div className="mt-6 bg-white rounded-lg border border-slate-200 overflow-hidden">
           {loading ? (
-            <p className="p-6 text-slate-400">Loading…</p>
+            <p className="p-6 text-slate-400 flex items-center gap-2">
+              <Spinner /> Loading…
+            </p>
           ) : resources.length === 0 ? (
             <p className="p-6 text-slate-400">No resources yet. Add your first one.</p>
           ) : (

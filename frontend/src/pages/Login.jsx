@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axiosClient from '../api/axiosClient'
+import Spinner from '../components/Spinner'
 import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
@@ -100,7 +101,13 @@ export default function Login() {
             disabled={loading}
             className="w-full rounded-md bg-brand py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60 transition"
           >
-            {loading ? 'Logging in…' : 'Login'}
+            {loading ? (
+              <span className="inline-flex items-center justify-center gap-2">
+                <Spinner /> Logging in…
+              </span>
+            ) : (
+              'Login'
+            )}
           </button>
         </form>
 
