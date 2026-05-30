@@ -73,7 +73,15 @@ public class DataSeeder implements CommandLineRunner {
                 resource("Data Structures Syllabus", "Official semester syllabus and topic breakdown.",
                         "Syllabus", "Data Structures", "https://college.edu/syllabus/ds", "LINK", admin.getId()),
                 resource("Computer Networks PYQ Bundle", "Five years of previous year questions in one file.",
-                        "Previous Year Questions", "Computer Networks", "https://drive.google.com/sample/cn-pyq", "PDF", admin.getId())
+                        "Previous Year Questions", "Computer Networks", "https://drive.google.com/sample/cn-pyq", "PDF", admin.getId()),
+                resource("Operating Systems Crash Course", "Quick revision video series before exams.",
+                        "Video", "Operating Systems", "https://youtube.com/playlist/os-crash-course", "VIDEO", admin.getId()),
+                resource("DBMS Normalization Cheat Sheet", "1NF to BCNF explained on a single page.",
+                        "Notes", "DBMS", "https://drive.google.com/sample/dbms-normalization", "PDF", admin.getId()),
+                resource("Placement Prep Roadmap", "Month-by-month plan covering DSA, CS fundamentals and projects.",
+                        "Guide", "Placements", "https://campusconnect.edu/guides/placement-roadmap", "LINK", admin.getId()),
+                resource("Data Structures PYQ 2022", "End-sem question paper with model answers.",
+                        "Previous Year Questions", "Data Structures", "https://drive.google.com/sample/ds-pyq-2022", "PDF", admin.getId())
         );
 
         resourceRepository.saveAll(samples);
