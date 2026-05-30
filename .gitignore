@@ -36,3 +36,6 @@ pnpm-debug.log*
 
 # ===== OS / misc =====
 Thumbs.db
+
+# ===== Local run artifacts (logs + pid files from scripts/) =====
+.run/

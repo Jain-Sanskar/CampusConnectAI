@@ -58,6 +58,17 @@ CampusConnectAI/
 
 ## Getting Started
 
+### Quickest path — helper scripts
+
+```bash
+./scripts/setup.sh    # first time only: installs JDK 17, Node, Maven, MySQL (macOS/Homebrew)
+./scripts/start.sh    # starts MySQL + backend + frontend (skips anything already running)
+./scripts/status.sh   # shows which components are up / down
+./scripts/stop.sh     # stops backend + frontend (add --all to also stop MySQL)
+```
+
+### Manual path
+
 You need **JDK 17+**, **Node 18+**, and **MySQL 8** running locally.
 
 ```bash
